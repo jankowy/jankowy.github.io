@@ -1,4 +1,5 @@
 *.sw?
 .tmp/
+.publish/
 node_modules/
 bower_components/

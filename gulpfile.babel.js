@@ -5,6 +5,7 @@ import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
 import ghPages from 'gulp-gh-pages';
+import rename from 'gulp-rename';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;

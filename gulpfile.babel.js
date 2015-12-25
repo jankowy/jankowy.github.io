@@ -10,6 +10,9 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('deploy', ['build'], () => {
+  gulp.src('./dist/index.html')
+    .pipe(rename('404.html'))
+    .pipe(gulp.dest('./dist'));
   return gulp.src('./dist/**/*')
     .pipe(ghPages({
       branch: 'master',

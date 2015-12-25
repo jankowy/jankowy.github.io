@@ -1,5 +1,6 @@
 *.sw?
 .tmp/
 .publish/
+.dist/
 node_modules/
 bower_components/

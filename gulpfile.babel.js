@@ -4,16 +4,16 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
-import RevAll from 'gulp-rev-all';
 import ghPages from 'gulp-gh-pages';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-gulp.task('deploy', function() {
+gulp.task('deploy', ['build'], () => {
   return gulp.src('./dist/**/*')
     .pipe(ghPages({
-      branch: 'master'
+      branch: 'master',
+      force: true
     }));
 });
 
@@ -60,7 +60,7 @@ gulp.task('html', ['styles'], () => {
     .pipe(assets.restore())
     .pipe($.useref())
     .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
-    .pipe(gulp.dest('.tmp/dist'));
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('images', () => {
@@ -76,7 +76,7 @@ gulp.task('images', () => {
       console.log(err);
       this.end();
     })))
-    .pipe(gulp.dest('.tmp/dist/images'));
+    .pipe(gulp.dest('dist/images'));
 });
 
 gulp.task('fonts', () => {
@@ -84,7 +84,7 @@ gulp.task('fonts', () => {
     filter: '**/*.{eot,svg,ttf,woff,woff2}'
   }).concat('app/fonts/**/*'))
     .pipe(gulp.dest('.tmp/fonts'))
-    .pipe(gulp.dest('.tmp/dist/fonts'));
+    .pipe(gulp.dest('dist/fonts'));
 });
 
 gulp.task('extras', () => {
@@ -93,7 +93,7 @@ gulp.task('extras', () => {
     '!app/*.html'
   ], {
     dot: true
-  }).pipe(gulp.dest('.tmp/dist'));
+  }).pipe(gulp.dest('dist'));
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
@@ -165,10 +165,6 @@ gulp.task('wiredep', () => {
 });
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
-  var revAll = new RevAll({ dontRenameFile: [/^\/favicon.ico$/g, '.html', /^\/robots.txt$/g] });
-  gulp.src('.tmp/dist/**')
-      .pipe(revAll.revision())
-      .pipe(gulp.dest('dist'));
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
